@@ -43,5 +43,4 @@ function mapPulse(angle, minAngle, maxAngle, minPulse, maxPulse) {
 setTimeout(() => {
     calculateAngles()
     // socket.send("1410,1250,1410,1190,1630")
-    // console.log("sent")
 }, 5000)
