@@ -8,6 +8,7 @@ let increment = 1, step = 0, index = 0
 const positions = [
     { x: 0, y: 18, z: 38, pan: 0, rotation: 0, tilt: 0 },
     { x: 0, y: 28, z: 28, pan: 0, rotation: 0, tilt: 0 },
+    { x: 0, y: 8, z: 58, pan: 0, rotation: 0, tilt: 0 },
 ]
 
 new p5(sketch, 'arm')
