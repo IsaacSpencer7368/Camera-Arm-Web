@@ -3,8 +3,25 @@ let x = 0, y = 8, z = 58, tilt = 0, pan = 0, rotation = 0
 let px, py, pz, pTilt, pPan, pRotation
 let j1 = 90, j2 = 0, j3 = 0
 let l1 = 16, l2 = 16, l3 = 8, zOffset = 27
+let i3 = 0, i4 = 0, i5 = 0
+let s3 = 0, s4 = 0, s5 = 0
 
 new p5(sketch, 'arm')
+
+class Position {
+    constructor(_j1, _j2, _j3, _j4, _j5, _t3, _t4, _t5) {
+        this.j1 = _j1
+        this.j2 = _j2
+        this.j3 = _j3
+        this.j4 = _j4
+        this.j5 = _j5
+        this.t3 = _t3
+        this.t4 = _t4
+        this.t5 = _t5
+    }
+}
+
+const positions = [ new Position(1316, 1448, 1938, 1210, 1620, 4, 4, 4) ]
 
 function degToRad(deg) {
     return deg * (Math.PI / 180)
@@ -33,6 +50,7 @@ function calculateAngles() {
     const p3 = mapPulse(j3, 90, -90, 760, 2040)
     const p4 = mapPulse(pan, -90, 90, 580, 1840)
     const p5 = mapPulse(rotation, -90, 90, 1000, 2240)
+    console.log(p1, p2, p3, p4, p5)
     if (socket.readyState === socket.OPEN) socket.send(`${p1},${p2},${p3},${p4},${p5}`)
 }
 

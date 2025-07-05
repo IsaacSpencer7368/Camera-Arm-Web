@@ -14,6 +14,14 @@ function sketch(p) {
     }
     p.draw = function() {
         const [gp, junk] = navigator.getGamepads()
+        if (p.mouseIsPressed && p.mouseX > 0 && p.mouseX < p.width && p.mouseY > 0 && p.mouseY < p.height) {
+            my = (p.mouseX / ppi - p.width / 8 / ppi)
+            mz = (p.height / ppi - p.mouseY / ppi)
+            console.log(`Mouse: ${my}, ${mz}`)
+            y = my
+            z = mz
+            calculateAngles()
+        }
         if (gp) {
             if (Math.abs(gp.axes[0]) > 0.1) { // x axis
                 x += gp.axes[0] * 0.25
@@ -26,6 +34,18 @@ function sketch(p) {
             }
             if (Math.abs(gp.axes[3]) > 0.1) { // y axis
                 y += gp.axes[3] * 0.25
+            }
+            if (gp.buttons[0].pressed) { // home
+                s3 = 1.0 / (positions[0].t3 * 1000 / 33.33)
+                i3 = 0
+                setTimeout(() => {
+                    x = 0
+                    y = 8
+                    z = 58
+                    tilt = 0
+                    pan = 0
+                    rotation = 0
+                }, positions[0].t3 * 1000)
             }
             if (gp.buttons[4].pressed) { // rotate CCW
                 tilt -= 1
@@ -46,6 +66,11 @@ function sketch(p) {
                 pRotation = rotation
                 calculateAngles()
             }
+        }
+        if (i3 < 1.0) {
+            i3 += s3
+            const curve = i3 * i3 / (2.0 * (i3 * i3 - i3) + 1.0)
+
         }
         p.background(220)
         v1.setHeading(-p.round(j1))
