@@ -14,7 +14,7 @@ function sketch(p) {
     p.draw = function() {
         if (p.mouseIsPressed) {
             if (increment >= 1) {
-                step = 1 / (5000 / 33.33)
+                step = 1 / (3000 / (1000 / p.frameRate()))
                 increment = 0
                 calculateAngles()
                 index++
