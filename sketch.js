@@ -46,7 +46,7 @@ function sketch1(p) {
                 pPan = pan
                 pRotation = rotation
                 calculateAngles()
-                console.log(x, y, z)
+                // console.log(x, y, z)
             }
         }
         p.background(220)

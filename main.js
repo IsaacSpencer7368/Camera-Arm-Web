@@ -30,7 +30,7 @@ function calculateAngles() {
         j3 = p3
     }
     console.log(j1, j2, j3)
-    const pwm1 = mapPulse(j1 - 90, 90, -90, 850, 1960)
+    const pwm1 = mapPulse(j1 + 90, 90, -90, 850, 1960)
     const pwm2 = mapPulse(j2, 90, -90, 650, 1860)
     const pwm3 = mapPulse(j3, 90, -90, 760, 2040)
     const pwm4 = mapPulse(pan, -90, 90, 580, 1840)
