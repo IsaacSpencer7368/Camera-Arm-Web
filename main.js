@@ -1,42 +1,43 @@
 const socket = new WebSocket('ws://192.168.1.210:3000')
-let l1 = 16, l2 = 16, l3 = 8, zOffset = 27
-let j1 = 104.36, j2 = -28.72, j3 = -75.64
-let p1 = 0, p2 = 0, p3 = 0
-let t1 = 0, t2 = 0, t3 = 0
-let increment = 1, step = 0, index = 0
+let x = 0, y = 4, z = 12, tilt = 0, pan = 0, rotation = 0
+let px, py, pz, pTilt, pPan, pRotation
+let j1 = -90, j2 = 0, j3 = 0
+let l1 = 12, l2 = 12, l3 = 4, zOffset = 36
 
-const positions = [
-    { x: 0, y: 18, z: 38, pan: 0, rotation: 0, tilt: 0 },
-    { x: 0, y: 28, z: 28, pan: 0, rotation: 0, tilt: 0 },
-    { x: 0, y: 8, z: 58, pan: 0, rotation: 0, tilt: 0 },
-]
-
-new p5(sketch, 'arm')
+new p5(sketch1, 'sideSketch')
 
 function degToRad(deg) {
-    return deg * (Math.PI / 180)
+    return deg * (Math.PI / 180);
 }
   
 function radToDeg(rad) {
-    return rad / (Math.PI / 180)
+    return rad / (Math.PI / 180);
+}
+  
+function calculateAngles() {
+    const p1 = j1
+    const p2 = j2
+    const p3 = j3
+    const ay = y - l3 * Math.cos(degToRad(tilt))
+    const az = z - zOffset - l3 * Math.sin(degToRad(tilt))
+    j2 = Math.acos((Math.pow(ay, 2) + Math.pow(az, 2) - Math.pow(l1, 2) - Math.pow(l2, 2)) / (2 * l1 * l2))
+    j1 = radToDeg(Math.atan2(az, ay) - Math.atan2((l2 * Math.sin(j2)), (l1 + l2 * Math.cos(j2))))
+    j2 = radToDeg(j2)
+    j3 = tilt - j2 - j1
+    if (isNaN(j1) || isNaN(j2) || isNaN(j3)) {
+        j1 = p1
+        j2 = p2
+        j3 = p3
+    }
+    console.log(j1, j2, j3)
+    const pwm1 = mapPulse(j1 - 90, 90, -90, 850, 1960)
+    const pwm2 = mapPulse(j2, 90, -90, 650, 1860)
+    const pwm3 = mapPulse(j3, 90, -90, 760, 2040)
+    const pwm4 = mapPulse(pan, -90, 90, 580, 1840)
+    const pwm5 = mapPulse(rotation, -90, 90, 1000, 2240)
+    if (socket.readyState === socket.OPEN) socket.send(`${pwm1},${pwm2},${pwm3},${pwm4},${pwm5}`)
 }
 
 function mapPulse(angle, minAngle, maxAngle, minPulse, maxPulse) {
     return Math.round((angle - minAngle) * (maxPulse - minPulse) / (maxAngle - minAngle) + minPulse)
-}
-
-function calculateAngles() {
-    p1 = j1
-    p2 = j2
-    p3 = j3
-    const ay = positions[index].y - l3 * Math.cos(degToRad(positions[index].tilt))
-    const az = positions[index].z - zOffset - l3 * Math.sin(degToRad(positions[index].tilt))
-    t2 = -Math.acos((Math.pow(ay, 2) + Math.pow(az, 2) - Math.pow(l1, 2) - Math.pow(l2, 2)) / (2 * l1 * l2))
-    t1 = radToDeg(Math.atan2(az, ay) - Math.atan2((l2 * Math.sin(t2)), (l1 + l2 * Math.cos(t2))))
-    t2 = radToDeg(t2)
-    t3 = positions[index].tilt - t2 - t1
-    console.log(`Angles: ${t1}, ${t2}, ${t3}`)
-    if (isNaN(t1)) t1 = j1
-    if (isNaN(t2)) t2 = j2
-    if (isNaN(t3)) t3 = j3
 }
